@@ -10,9 +10,7 @@ export class ArkeosMdcDataTable<T> extends XTagElement  {
 
     public _dataTable: dataTable.MDCDataTable;
 
-    private _dataHeadPanelElement: HTMLElement; 
-    private _dataHeads: Array<HTMLElement> = []; 
-    private _dataPanels: Array<HTMLElement> = []; 
+    private _dataHeads: Array<ArkeosMdcDataTableColumn>; 
 
     //Attributes
     private _selectIndex = 0;
@@ -49,37 +47,36 @@ export class ArkeosMdcDataTable<T> extends XTagElement  {
         return this._data;
     }
 
+    '::template'() {
+        let heads = this._dataHeads.reduce<string>((acum, cell) => acum + cell.header(), '');
+
+        return `<div class="mdc-data-table" style="width: 100%; height: 100%;">
+        <div class="mdc-data-table__table-container">
+        <table class="mdc-data-table__table" aria-label="Dessert calories">
+            <thead>
+                <tr class="mdc-data-table__header-row">${heads}</tr>
+            </thead>
+            <tbody class="mdc-data-table__content"></tbody>
+        </table>
+    </div>
+</div>
+`; 
+
+    }
+
     constructor() {
         super();
 
         this.host = this as unknown as HTMLElement;
-        this.host.style.width = "100%";
-        this.host.style.height = "100%";
-        this.host.style.overflow = "none";
+        this.host.setAttribute("style", "width; 100%; height: 100%; overflow: none;");
 
-        let _dataChilds = Array.from(this.host.children) as unknown as Array<HTMLElement>;
-        this._dataHeads = _dataChilds.filter((_tabHead) => _tabHead.localName == "arkeos-mdc-datatable-column");
-        this._dataPanels = _dataChilds.filter((_tabPanel) => _tabPanel.localName == "arkeos-mdc-tab-panel");
-//         this.host.innerHTML = 
-// `<div class="mdc-data-table" style="width: 100%; height: 100%;">
-//     <div class="mdc-data-table__table-container">
-//         <table class="mdc-data-table__table" aria-label="Dessert calories">
-//             <thead>
-//             <tr class="mdc-data-table__header-row"></tr>
-//             </thead>
-//             <tbody class="mdc-data-table__content"></tbody>
-//         </table>
-//     </div>
-// </div>
-// `; 
+        let _dataChilds = Array.from(this.host.children) as unknown as Array<ArkeosMdcDataTableColumn>;
+        this._dataHeads = _dataChilds.filter((_child) => _child.localName == "arkeos-mdc-datatable-column");
 
-        this.promise.then(() => {
-            let container = this.host.querySelector('.mdc-data-table');
-            this._dataTable = new dataTable.MDCDataTable(container);
-
+        this.promise = this.render().then(() => {
             let head = this.host.querySelector<HTMLTableElement>('.mdc-data-table__header-row');
-            // head.innerHTML = this._dataHeads.reduce<string>((acum, cell) => acum + (cell as unknown as ArkeosMdcDataTableColumn).header, ''); 
-        })
+            return this.host.querySelector<HTMLElement>('.mdc-data-table');
+        }).then((container: HTMLElement) => this._dataTable = new dataTable.MDCDataTable(container));
     }
 
     'resize::event'(e: DragEvent) {

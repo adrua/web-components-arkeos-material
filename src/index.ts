@@ -1,6 +1,8 @@
 import { ArkeosMdcDataTableColumn } from './components/mdc-data-table/arkeos-mdc-datatable-column.xtag';
 import { ArkeosMdcDataTable } from './components/mdc-data-table/arkeos-mdc-datatable.xtag';
 import { ArkeosMdcCheckBox } from './components/mdc-form/arkeos-mdc-form-checkbox.xtag';
+import { ArkeosMdcSelectItem } from './components/mdc-form/arkeos-mdc-form-select-item.xtag';
+import { ArkeosMdcSelect } from './components/mdc-form/arkeos-mdc-form-select.xtag';
 import { ArkeosMdcTextField } from './components/mdc-form/arkeos-mdc-form-text-field.xtag';
 import { ArkeosMdcAppBar } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-app-bar.xtag';
 import { ArkeosMdcAppBarContent } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-app-content.xtag';
@@ -16,6 +18,8 @@ import { ArkeosMdcTabs } from './components/mdc-layouts/mdc-tabs/arkeos-mdc-tabs
 export { ArkeosMdcDataTableColumn } from './components/mdc-data-table/arkeos-mdc-datatable-column.xtag';
 export { ArkeosMdcDataTable } from './components/mdc-data-table/arkeos-mdc-datatable.xtag';
 export { ArkeosMdcCheckBox } from './components/mdc-form/arkeos-mdc-form-checkbox.xtag';
+export { ArkeosMdcSelectItem } from './components/mdc-form/arkeos-mdc-form-select-item.xtag';
+export { ArkeosMdcSelect } from './components/mdc-form/arkeos-mdc-form-select.xtag';
 export { ArkeosMdcTextField } from './components/mdc-form/arkeos-mdc-form-text-field.xtag';
 export { ArkeosMdcAppBar } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-app-bar.xtag';
 export { ArkeosMdcAppBarContent } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-app-content.xtag';
@@ -30,6 +34,7 @@ export { ArkeosMdcTabs } from './components/mdc-layouts/mdc-tabs/arkeos-mdc-tabs
 
 declare var xtag: any;
 
+import './index.css';
 import './index.scss';
 
 function registerComponent(webComponent: string, newComponent: any) {
@@ -46,6 +51,8 @@ function registerComponent(webComponent: string, newComponent: any) {
 //Forms Input
 registerComponent('arkeos-mdc-text-field', ArkeosMdcTextField);
 registerComponent('arkeos-mdc-checkbox', ArkeosMdcCheckBox);
+registerComponent('arkeos-mdc-select-item', ArkeosMdcSelectItem);
+registerComponent('arkeos-mdc-select', ArkeosMdcSelect);
 
 registerComponent('arkeos-mdc-datatable-column', ArkeosMdcDataTableColumn);
 registerComponent('arkeos-mdc-datatable', ArkeosMdcDataTable);

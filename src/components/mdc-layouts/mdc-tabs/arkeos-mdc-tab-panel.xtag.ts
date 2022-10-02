@@ -19,9 +19,7 @@ export class ArkeosMdcTabPanel extends XTagElement  {
         super();
 
         this.host = this as unknown as HTMLElement;
-        let host_style = document.createAttribute("style");
-        host_style.value = "width: 100%; height: 100%; overflow: none;";
-        this.host.setAttributeNode(host_style);
+        this.host.setAttribute("style", "width: 100%; height: 100%; overflow: none;");
 
         let childs = Array.from(this.host.children);
 

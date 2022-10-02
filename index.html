@@ -8,9 +8,21 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <!-- <link rel="stylesheet" href="assets/material-components-web.min.css"> -->
     <link rel="stylesheet" href="../dist/arkeos-material/index.css">
+    <style>
+    .hide {
+        display: none;
+    }
+     
+   .target:hover + .hide {
+        display: block;
+        color: green;
+        font-size: 25px;
+    }
+    </style>
 </head>
 <body>
-    <div id="libary-test"></div>
+    <div id="library-test" class="target"></div>
+    <div id="library-export" class="hide"></div>
     <div>
         <arkeos-mdc-app>
             <arkeos-mdc-toolbar-row title="Arkeos Web Components">
@@ -29,13 +41,28 @@
             </arkeos-mdc-toolbar-row>
             <arkeos-mdc-app-content>
                 <arkeos-mdc-tabs>
-                    <arkeos-mdc-tab-head caption="Console"></arkeos-mdc-tab-head>
+                    <arkeos-mdc-tab-head caption="Form"></arkeos-mdc-tab-head>
                     <arkeos-mdc-tab-panel>
-                        <pre>...loading tab Console</pre>
+                        <arkeos-mdc-text-field caption="Name:"></arkeos-mdc-text-field>
+                        <arkeos-mdc-checkbox caption="Active:"></arkeos-mdc-checkbox>                        
+                        <arkeos-mdc-select caption="Favorite language:">
+                            <arkeos-mdc-select-item value="JS">Javascript</arkeos-mdc-select-item>                            
+                            <arkeos-mdc-select-item value="TS">Typescript</arkeos-mdc-select-item>                            
+                            <arkeos-mdc-select-item value="DT">Dart</arkeos-mdc-select-item>                            
+                            <arkeos-mdc-select-item caption="CoffeScript" value="CFS"></arkeos-mdc-select-item>                            
+                        </arkeos-mdc-select>                        
                     </arkeos-mdc-tab-panel>
-                    <arkeos-mdc-tab-head caption="AST"></arkeos-mdc-tab-head>
+                    <arkeos-mdc-tab-head caption="DataTable"></arkeos-mdc-tab-head>
                     <arkeos-mdc-tab-panel>
-                        <pre>...loading tab AST</pre>
+                        <arkeos-mdc-datatable>
+                            <arkeos-mdc-datatable-column caption="Id" column="id"></arkeos-mdc-datatable-column>
+                            <arkeos-mdc-datatable-column caption="Value" column="value"></arkeos-mdc-datatable-column>
+                            <arkeos-mdc-datatable-column caption="Quantity" column="quantity"></arkeos-mdc-datatable-column>
+                        </arkeos-mdc-datatable> 
+                    </arkeos-mdc-tab-panel>
+                    <arkeos-mdc-tab-head caption="Layout"></arkeos-mdc-tab-head>
+                    <arkeos-mdc-tab-panel>
+                        <pre>...under construction</pre>
                     </arkeos-mdc-tab-panel>
                 </arkeos-mdc-tabs>
             </arkeos-mdc-app-content>
@@ -48,21 +75,28 @@
 
     <script>
         let library = "arkeos-material"
-        var div = document.querySelector('#libary-test');
+        var div = document.querySelector('#library-test');
         var myLib = window[library];
         var exports = Object.keys(myLib).reduce((acum, element) => `
     ${acum}<tr><th/><th>${element}</th></tr>
     `, '');
-        div.innerHTML += `<table>
-    <tr>
-        <th>Library</th><th>Loaded</th>        
-    </tr>
-    <tr>
-        <th>${library}</th><th>${!!myLib}</th>        
-    </tr>
-    <tbody>
-    ${exports}
-    </tbody>
+        div.innerHTML += `<table id="library-table">
+    <thead>
+        <tr>
+            <th>Library</th><th>Loaded</th>        
+        </tr>
+        <tr>
+            <th>${library}</th><th>${!!myLib}</th>        
+        </tr>
+    </thead>
+</table>`;
+    div = document.querySelector('#library-export');
+
+    div.innerHTML += `
+    <table>
+        <tbody id="library-body">
+        ${exports}
+        </tbody>
     </table>
     `
     </script>
