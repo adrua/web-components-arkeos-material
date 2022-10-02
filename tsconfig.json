@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+      "outDir": "../dist/arkeos-material/",
+      "sourceMap": true,
+      "noImplicitAny": true,
+      "module": "None",
+      "target": "ES2022",
+      "jsx": "react",
+      "allowJs": true,
+      "moduleResolution": "node",
+      "declaration": true,
+      "declarationDir": "../dist/arkeos-material/",
+      "typeRoots": [ 
+        "./node_modules/@types",
+        "./src/assets/arkeos-support/src/**"
+      ]
+    }
+  }

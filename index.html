@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Arkeos x-tag Tests</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- <link rel="stylesheet" href="assets/material-components-web.min.css"> -->
+    <link rel="stylesheet" href="../dist/arkeos-material/index.css">
+</head>
+<body>
+    <div id="libary-test"></div>
+    <div>
+        <arkeos-mdc-app>
+            <arkeos-mdc-toolbar-row title="Arkeos Web Components">
+                <arkeos-mdc-icon icon="menu" aria-label="Open navigation menu" align="start" id="menuIcon"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="favorite" aria-label="Favorite" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="search" aria-label="Search" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="add" aria-label="Add" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="delete" aria-label="Delete" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="save" aria-label="Save" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="autorenew" aria-label="autorenew" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="cloud_download" aria-label="Download" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="science" aria-label="Tests" align="end"></arkeos-mdc-icon>
+                <arkeos-mdc-icon icon="play_circle_outline" aria-label="Play" align="end"></arkeos-mdc-icon>
+                
+                <arkeos-mdc-icon icon="more_vert" aria-label="Options" align="end"></arkeos-mdc-icon>
+            </arkeos-mdc-toolbar-row>
+            <arkeos-mdc-app-content>
+                <arkeos-mdc-tabs>
+                    <arkeos-mdc-tab-head caption="Console"></arkeos-mdc-tab-head>
+                    <arkeos-mdc-tab-panel>
+                        <pre>...loading tab Console</pre>
+                    </arkeos-mdc-tab-panel>
+                    <arkeos-mdc-tab-head caption="AST"></arkeos-mdc-tab-head>
+                    <arkeos-mdc-tab-panel>
+                        <pre>...loading tab AST</pre>
+                    </arkeos-mdc-tab-panel>
+                </arkeos-mdc-tabs>
+            </arkeos-mdc-app-content>
+        </arkeos-mdc-app>
+        <div style="display: none; width: auto; max-width: 60%; height: 60vh; overflow-y: auto;" id="menuTools"></div>    
+    </div>
+
+    <script src="../dist/x-tag-raw.min.js" ></script>
+    <script src="../dist/arkeos-material/index.js" ></script>
+
+    <script>
+        let library = "arkeos-material"
+        var div = document.querySelector('#libary-test');
+        var myLib = window[library];
+        var exports = Object.keys(myLib).reduce((acum, element) => `
+    ${acum}<tr><th/><th>${element}</th></tr>
+    `, '');
+        div.innerHTML += `<table>
+    <tr>
+        <th>Library</th><th>Loaded</th>        
+    </tr>
+    <tr>
+        <th>${library}</th><th>${!!myLib}</th>        
+    </tr>
+    <tbody>
+    ${exports}
+    </tbody>
+    </table>
+    `
+    </script>
+</body>
+</html>
