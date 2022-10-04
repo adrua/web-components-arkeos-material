@@ -4,6 +4,7 @@ import { ArkeosMdcDataTableColumn } from './arkeos-mdc-datatable-column.xtag';
 declare var XTagElement: any;
 
 export class ArkeosMdcDataTable<T> extends XTagElement  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     public promise = new Promise<void>((resolve) => resolve());
@@ -48,7 +49,9 @@ export class ArkeosMdcDataTable<T> extends XTagElement  {
     }
 
     '::template'() {
-        let heads = this._dataHeads.reduce<string>((acum, cell) => acum + cell.header(), '');
+        let heads = this._dataHeads.reduce<string>((acum, cell) => acum 
++ `<th class="mdc-data-table__header-cell" role="columnheader" scope="col">${cell.getAttribute("caption")}</th>
+`, '');
 
         return `<div class="mdc-data-table" style="width: 100%; height: 100%;">
         <div class="mdc-data-table__table-container">

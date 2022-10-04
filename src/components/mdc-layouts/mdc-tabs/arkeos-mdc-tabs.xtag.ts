@@ -1,70 +1,45 @@
-import { tab, tabBar, tabScroller } from 'material-components-web';
+import { MDCTabBar, MDCTabBarActivatedEvent} from "@material/tab-bar";
+import { MDCTabScroller } from "@material/tab-scroller";
+import { MDCTab } from "@material/tab";
 
 declare var XTagElement: any;
 
 export class ArkeosMdcTabs extends XTagElement  {
     public host: HTMLElement;
 
-    public promise = new Promise<void>((resolve) => resolve());
+    public promise: Promise<void>;
 
-    public _tabBar: tabBar.MDCTabBar;
-    public _tabScroller: tabScroller.MDCTabScroller;
-    public _tabs: Array<tab.MDCTab> = [];
+    public _tabBar: MDCTabBar;
 
-    private _tabHeadPanelElement: HTMLElement; 
-    private _tabHeads: Array<HTMLElement> = []; 
+    private _tabHeadPanelElement: HTMLDivElement;
+    private _tabHeads: Array<Element> = []; 
     private _tabPanels: Array<HTMLElement> = []; 
 
-    private div_0: HTMLDivElement;
-
     //Attributes
-    private _selectIndex = 0;
-    set 'selectIndex::attr'(val: number) {
-        this.promise.then(() => {
-            if(this._tabPanels[this._selectIndex]) {
-                this._tabPanels[this._selectIndex].style.display = "none";
-                this._selectIndex = val;
-                this._tabPanels[val].style.display = "block";    
-            }
-        });
+    private _previousTab: number;
+    private _selectTab: number;
+    set 'select-tab::attr'(val: number) {
+        if(this._selectTab !== val) {
+            this._previousTab = this._selectTab;
+            this._selectTab = val;
+
+            this.promise?.then(() => {
+                let _panel = this._tabPanels[this._selectTab] as HTMLElement;
+                if(_panel) {
+                    _panel.style.display = "block";
+
+                    _panel = this._tabPanels[this._previousTab] as HTMLElement;
+                    if(_panel) {
+                        _panel.style.display = "none";
+                    }
+    
+                }
+            });
+        }
     }
 
-    get 'selectIndex::attr'(): number {
-        return this._selectIndex;
-    }
-
-    private preRender(): DocumentFragment {
-        let fragment = document.createDocumentFragment();
-		this.div_0 = document.createElement("div");
-		let div_0_class = document.createAttribute("class");
-		div_0_class.value = "mdc-tab-bar";
-		this.div_0.setAttributeNode(div_0_class);
-
-		let div_0_role = document.createAttribute("role");
-		div_0_role.value = "tablist";
-		this.div_0.setAttributeNode(div_0_role);
-
-		let div_1 = document.createElement("div");
-		let div_1_class = document.createAttribute("class");
-		div_1_class.value = "mdc-tab-scroller";
-		div_1.setAttributeNode(div_1_class);
-
-		let div_2 = document.createElement("div");
-		let div_2_class = document.createAttribute("class");
-		div_2_class.value = "mdc-tab-scroller__scroll-area";
-		div_2.setAttributeNode(div_2_class);
-
-		let div_3 = document.createElement("div");
-		let div_3_class = document.createAttribute("class");
-		div_3_class.value = "mdc-tab-scroller__scroll-content";
-		div_3.setAttributeNode(div_3_class);
-
-		div_2.append(div_3);
-		div_1.append(div_2);
-		this.div_0.append(div_1);
-		fragment.append(this.div_0);
-
-        return fragment;
+    get 'select-tab::attr'(): number {
+        return this._selectTab;
     }
 
     constructor() {
@@ -74,37 +49,45 @@ export class ArkeosMdcTabs extends XTagElement  {
         this.host.style.width = "100%";
         this.host.style.height = "100%";
         this.host.style.overflow = "none";
+        this.host.classList.add("mdc-tab-bar");
+        this.host.setAttribute("role", "tablist");
 
-        let _tabChilds = Array.from(this.host.children) as unknown as Array<HTMLElement>;
+        let _tabChilds = Array.from(this.host.children);
         this._tabHeads = _tabChilds.filter((_tabHead) => _tabHead.localName == "arkeos-mdc-tab-head");
-        this._tabPanels = _tabChilds.filter((_tabPanel) => _tabPanel.localName == "arkeos-mdc-tab-panel");
+        this._tabPanels = _tabChilds.filter((_tabPanel) => _tabPanel.localName == "arkeos-mdc-tab-panel") as unknown as Array<HTMLElement>;
 
-        this.host.replaceChildren(this.preRender());
-
-        this.promise.then(() => {
+        this.promise = this.render().then(() => {
             this._tabHeadPanelElement = this.host.querySelector(".mdc-tab-scroller__scroll-content");
 
-            this._tabHeads.forEach((_tabHead) => {
-                this._tabHeadPanelElement.append(_tabHead);
+            this._tabHeads.forEach((_tabHead, index) => {
+                _tabHead.setAttribute("tabindex", index.toString());
+                this._tabHeadPanelElement.appendChild(_tabHead);
             });
 
-            this._tabPanels.forEach((_tabPanel, index) => {
-                this.host.append(_tabPanel);                
+            this._tabPanels.forEach((_tabPanel) => {
+                this.host.appendChild(_tabPanel);                
             });
-
-            this["selectIndex"] = 0;
         }).then(() => {
-            this._tabBar = new tabBar.MDCTabBar(this.div_0);
-            this._tabBar["tabList"] = this._tabBar["tabList"].filter((tabItem: any) => tabItem.root.localName != "arkeos-mdc-tab-head"); 
-
-            this._tabBar.listen<tabBar.MDCTabBarActivatedEvent>('MDCTabBar:activated', (event: tabBar.MDCTabBarActivatedEvent) => {
+            this._tabBar = new MDCTabBar(this.host);
+            let _this = this;
+            this._tabBar.listen<MDCTabBarActivatedEvent>('MDCTabBar:activated', (event: MDCTabBarActivatedEvent) => {
                 // Show content for newly-activated tab
-                this["selectIndex"] = event.detail.index;
+                if((event as any)["path"][0] === _this) {
+                    event.preventDefault();
+                    _this["select-tab"] = event.detail.index;
+                }
             });    
+
+            this._selectTab = this._selectTab || 0;
+            this._tabBar.activateTab(this._selectTab);
         })
     }
 
-    'resize::event'(e: DragEvent) {
-        this.editor.layout();
+    '::template'() {
+        return `<div class="mdc-tab-scroller">
+    <div class="mdc-tab-scroller__scroll-area">
+        <div class="mdc-tab-scroller__scroll-content"></div>
+    </div>
+</div>`;
     }
 }

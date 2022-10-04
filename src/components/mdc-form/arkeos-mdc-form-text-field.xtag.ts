@@ -2,6 +2,8 @@ import { textField } from 'material-components-web';
 
 declare var XTagElement: any;
 
+declare type InputType = "text" | "number" | "email" | "url" | "date" | "datetime-local" | "color"   
+                        | "checkbox" | "month" | "tel" | "time" | "week"  ;
 export class ArkeosMdcTextField extends XTagElement  {
     public host: HTMLElement;
 
@@ -11,8 +13,21 @@ export class ArkeosMdcTextField extends XTagElement  {
 
     //Attributes
     private _captionElement: HTMLElement = null;
-    set 'caption::attr'(val) {
+    private _caption: string;
+    set 'caption::attr'(val: string) {
+        this._caption = val;
         this.promise.then(() => this._captionElement.replaceChildren(val));
+    }
+
+    private _inputElement: HTMLElement = null;
+    private _type: InputType;
+    get 'type::attr'() {
+        return this._inputElement.getAttribute("type") as InputType;
+    }
+
+    set 'type::attr'(val: InputType) {
+        this._type = val;
+        this.promise.then(() => this._inputElement.setAttribute("type", val));
     }
 
     get 'caption::attr'() {
@@ -39,6 +54,11 @@ export class ArkeosMdcTextField extends XTagElement  {
         this.promise = this.render().then(() => {
             this.field = new textField.MDCTextField(this.host);
             this._captionElement = this.host.querySelector('.mdc-floating-label');
+            this._captionElement.replaceChildren(this._caption);
+
+            this._inputElement = this.host.querySelector('.mdc-text-field__input');
+            this._inputElement.setAttribute("type", this._type);
+
         }).then(() => {
             childs.forEach((child) => this.host.appendChild(child));
         })
