@@ -1,4 +1,4 @@
-import { checkbox } from 'material-components-web';
+import { MDCCheckbox } from '@material/checkbox';
 
 declare var XTagElement: any;
 
@@ -7,7 +7,7 @@ export class ArkeosMdcCheckBox extends XTagElement  {
 
     public promise: Promise<void>;
 
-    private field: checkbox.MDCCheckbox;
+    private _field: MDCCheckbox;
 
     //Attributes
     private _captionElement: HTMLSpanElement;
@@ -52,7 +52,12 @@ export class ArkeosMdcCheckBox extends XTagElement  {
             <div class="mdc-checkbox__mixedmark"></div>
         </div>
     </div>    
-</div>`;
+</div>
+<style>
+    .arkeos-mdc-label {
+        padding-top: 10px;
+    }
+</style>`;
     }
 
     constructor() {
@@ -65,7 +70,7 @@ export class ArkeosMdcCheckBox extends XTagElement  {
 
         this.promise = this.render().then(() => {
             let _checkbox = this.host.querySelector<HTMLDivElement>('.mdc-checkbox');
-            this.field = new checkbox.MDCCheckbox(_checkbox);
+            this._field = new MDCCheckbox(_checkbox);
             this._captionElement = this.host.querySelector<HTMLSpanElement>('.arkeos-mdc-label');
             this._captionElement.replaceChildren(this._caption);
             this._captionElement.style.float = this._labelPosition;

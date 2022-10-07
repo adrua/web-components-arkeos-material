@@ -23,6 +23,7 @@ export class ArkeosMdcListItem extends XTagElement.extensions(HTMLLIElement)  {
     constructor() {
         super();
         this.host = this as unknown as HTMLElement;
+        this.host.classList.add("mdc-list-item");
         this._items = Array.from(this.host.children) as unknown as Array<HTMLElement>;
 
         this.render().then(() => {
@@ -38,7 +39,7 @@ export class ArkeosMdcListItem extends XTagElement.extensions(HTMLLIElement)  {
     '::template'() {
 
         return `<span class="mdc-list-item__ripple" style="flex-direction: row;"></span>
-        <span class="mdc-list-item__text" style="flex-direction: column;">${this.getAttribute("caption") || ''}</span>
+        <span class="mdc-list-item__text" style="flex-direction: column;">${this._caption || ''}</span>
 `; 
     }
 

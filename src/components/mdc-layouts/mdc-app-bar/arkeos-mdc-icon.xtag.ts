@@ -1,17 +1,19 @@
+import { MDCRipple } from '@material/ripple';
+
 declare var XTagElement: any;
 
 export class ArkeosMdcIcon extends XTagElement  {
     public host: HTMLElement;
 
-    public promise = new Promise<void>((resolve) => resolve());
+    public promise: Promise<void>;
 
-    private button_0: HTMLButtonElement;
+    private _button: MDCRipple;
 
     private _aria_label = "";
     set 'aria-label::attr'(val: any) {
         this._aria_label = val;
         this.promise.then(() => {
-            this.button_0?.getAttribute("ariaLabel") && (this.button_0.setAttribute("ariaLabel", this._aria_label));
+            this.host.firstElementChild.getAttribute("ariaLabel") && (this.host.firstElementChild.setAttribute("ariaLabel", this._aria_label));
         });
     }
 
@@ -23,7 +25,7 @@ export class ArkeosMdcIcon extends XTagElement  {
     set 'icon::attr'(val: any) {
         this._icon = val;
         this.promise.then(() => {
-            this.button_0.replaceChildren(this._icon);
+            this.host.firstElementChild.textContent = this._icon;
         });
     }
 
@@ -35,31 +37,19 @@ export class ArkeosMdcIcon extends XTagElement  {
         super();
 
         this.host = this as unknown as HTMLElement;
-        this.host.style.width = "100%";
-        this.host.style.height = "100%";
-        this.host.style.overflow = "none";
+        this.host.setAttribute("style", "width: 100%; height: 100%; overflow: hidden;")
 
-        this.host.replaceChildren(this.preRender());
-
-        this.promise.then(() => {
+        this.promise = this.render().then(() => {
+            this._button = new MDCRipple(this.host.firstElementChild);
+            this._button.unbounded = true;
         })
     }
 
-    private preRender(): DocumentFragment {
-        let fragment = document.createDocumentFragment();
-		this.button_0 = document.createElement("button");
-		let button_0_class = document.createAttribute("class");
-		button_0_class.value = "material-icons mdc-top-app-bar__navigation-icon mdc-icon-button";
-		this.button_0.setAttributeNode(button_0_class);
-
-		let button_0_aria_label = document.createAttribute("aria-label");
-		button_0_aria_label.value = this._aria_label;
-		this.button_0.setAttributeNode(button_0_aria_label);
-
-		fragment.append(this.button_0);
-
-        return fragment;
+    '::template'() {   
+        return `<button class="mdc-icon-button material-icons">
+        <div class="mdc-icon-button__ripple"></div>
+        ${this._icon}
+      </button>`;        
     }
-
 }
 

@@ -32,7 +32,6 @@ export class ArkeosMdcTabs extends XTagElement  {
                     if(_panel) {
                         _panel.style.display = "none";
                     }
-    
                 }
             });
         }
@@ -46,9 +45,7 @@ export class ArkeosMdcTabs extends XTagElement  {
         super();
 
         this.host = this as unknown as HTMLElement;
-        this.host.style.width = "100%";
-        this.host.style.height = "100%";
-        this.host.style.overflow = "none";
+        this.host.setAttribute("style", "width: 100%; height: 100%; overflow: hidden;")
         this.host.classList.add("mdc-tab-bar");
         this.host.setAttribute("role", "tablist");
 
@@ -80,6 +77,7 @@ export class ArkeosMdcTabs extends XTagElement  {
 
             this._selectTab = this._selectTab || 0;
             this._tabBar.activateTab(this._selectTab);
+            this._tabPanels[this._selectTab].style.display = "block";
         })
     }
 

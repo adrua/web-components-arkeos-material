@@ -12,6 +12,7 @@ export class ArkeosMdcDataTable<T> extends XTagElement  {
     public _dataTable: dataTable.MDCDataTable;
 
     private _dataHeads: Array<ArkeosMdcDataTableColumn>; 
+    private _tbody: HTMLTableSectionElement;
 
     //Attributes
     private _selectIndex = 0;
@@ -26,22 +27,20 @@ export class ArkeosMdcDataTable<T> extends XTagElement  {
     }
 
     private _data: Array<T>;
-    set 'data::attr'(val: Array<T>) {
+    setData(val: Array<T>) {
         this._data = val;
-        let _body = this.host.querySelector<HTMLTableElement>('tbody');
 
-//         _body.innerHTML = val.reduce<string>((acumRows, row): string => {
-//             let cells = this._dataHeads.reduce<string>((acum, cell) => 
-//                 acum + 
-// `   <th class="mdc-data-table__cell" scope="row">${row[cell["column"]]}</th>
-// `, '');
+        this._tbody.innerHTML = val.reduce<string>((acumRows, row: any): string => {
+            let cells = this._dataHeads.reduce<string>((acum, cell: any) => 
+                acum + `   <td class="mdc-data-table__cell" scope="row">${row[cell["column"]]}</td>
+`, '');
 
-//             return acumRows +
-// `<tr>
-// ${cells}
-// </tr>
-// `;
-//         }, '');
+            return acumRows +
+`<tr>
+${cells}
+</tr>
+`;
+        }, '');
     }
 
     get 'data::attr'(): Array<T> {
@@ -77,12 +76,8 @@ export class ArkeosMdcDataTable<T> extends XTagElement  {
         this._dataHeads = _dataChilds.filter((_child) => _child.localName == "arkeos-mdc-datatable-column");
 
         this.promise = this.render().then(() => {
-            let head = this.host.querySelector<HTMLTableElement>('.mdc-data-table__header-row');
+            this._tbody = this.host.querySelector('tbody');
             return this.host.querySelector<HTMLElement>('.mdc-data-table');
         }).then((container: HTMLElement) => this._dataTable = new dataTable.MDCDataTable(container));
-    }
-
-    'resize::event'(e: DragEvent) {
-        this.editor.layout();
     }
 }
