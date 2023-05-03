@@ -3,17 +3,30 @@ import { MDCRipple } from '@material/ripple';
 declare var XTagElement: any;
 
 export class ArkeosMdcIcon extends XTagElement  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     public promise: Promise<void>;
 
     private _button: MDCRipple;
 
+    private _role = "";
+    set 'role::attr'(val: any) {
+        this._role = val;
+        this.promise.then(() => {
+            this.host.firstElementChild.setAttribute("role", this._role);
+        });
+    }
+
+    get 'role::attr'(): any {
+        return this._role
+    }
+
     private _aria_label = "";
     set 'aria-label::attr'(val: any) {
         this._aria_label = val;
         this.promise.then(() => {
-            this.host.firstElementChild.getAttribute("ariaLabel") && (this.host.firstElementChild.setAttribute("ariaLabel", this._aria_label));
+            this.host.firstElementChild.setAttribute("aria-abel", this._aria_label);
         });
     }
 
@@ -24,7 +37,7 @@ export class ArkeosMdcIcon extends XTagElement  {
     private _icon = "";
     set 'icon::attr'(val: any) {
         this._icon = val;
-        this.promise.then(() => {
+        this.promise?.then(() => {
             this.host.firstElementChild.textContent = this._icon;
         });
     }
@@ -46,9 +59,9 @@ export class ArkeosMdcIcon extends XTagElement  {
     }
 
     '::template'() {   
-        return `<button class="mdc-icon-button material-icons">
+        return `<button class="mdc-icon-button material-icons" role="${this.getAttribute('role') || 'toolbar'}" aria-label=${this.getAttribute('aria-label')} title=${this.getAttribute('aria-label')}>
         <div class="mdc-icon-button__ripple"></div>
-        ${this._icon}
+        ${this.getAttribute('icon')}
       </button>`;        
     }
 }

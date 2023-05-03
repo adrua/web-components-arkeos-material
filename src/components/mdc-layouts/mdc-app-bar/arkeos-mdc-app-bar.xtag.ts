@@ -1,8 +1,10 @@
 import { topAppBar } from 'material-components-web'
 
+declare var xtag: any;
 declare var XTagElement: any;
 
 export class ArkeosMdcAppBar extends XTagElement  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     public promise = new Promise<void>((resolve) => resolve());
@@ -31,12 +33,6 @@ export class ArkeosMdcAppBar extends XTagElement  {
         this.promise.then(() => {
             this.appBar = new topAppBar.MDCTopAppBar(this.header_0);
         })
-    }
-
-    'click::event:delegate(arkeos-mdc-icon)'(ev: PointerEvent) {
-        if((ev as any)["path"][4].localName == "arkeos-mdc-toolbar-row") {
-            (ev as any)["path"][6].appcontent.firstElementChild.clickIcon(this, ev);
-        }
     }
 
     private preRender(): DocumentFragment {

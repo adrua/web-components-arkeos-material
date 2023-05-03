@@ -1,6 +1,7 @@
 declare var XTagElement: any;
 
 export class ArkeosMdcAppBarContent extends XTagElement  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     public promise = new Promise<void>((resolve) => resolve());

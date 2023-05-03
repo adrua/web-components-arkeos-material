@@ -3,6 +3,7 @@ import { select } from 'material-components-web';
 declare var XTagElement: any;
 
 export class ArkeosMdcSelectItem extends XTagElement.extensions(HTMLLIElement)  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     public promise: Promise<void>;

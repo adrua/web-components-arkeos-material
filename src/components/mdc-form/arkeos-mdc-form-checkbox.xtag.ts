@@ -3,6 +3,7 @@ import { MDCCheckbox } from '@material/checkbox';
 declare var XTagElement: any;
 
 export class ArkeosMdcCheckBox extends XTagElement  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     public promise: Promise<void>;

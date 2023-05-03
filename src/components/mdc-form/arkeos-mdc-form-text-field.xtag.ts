@@ -7,6 +7,7 @@ declare type InputType = "text" | "number" | "email" | "url" | "date" | "datetim
 
 declare type ModeType = "filled" | "outlined";
 export class ArkeosMdcTextField extends XTagElement  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     public promise: Promise<void>;
@@ -45,7 +46,7 @@ export class ArkeosMdcTextField extends XTagElement  {
 
     set 'data-value::attr'(val: string) {
         this._value = val;
-        this.promise.then(() => this._field.value = val);
+        this.promise.then(() => this._field && (this._field.value = val));
     }
 
     private _mode: ModeType;

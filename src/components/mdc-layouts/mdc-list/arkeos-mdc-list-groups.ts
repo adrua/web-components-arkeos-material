@@ -4,6 +4,7 @@ declare var xtag: any;
 declare var XTagElement: any;
 
 export class ArkeosMdcListGroup extends XTagElement  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
 
     private _itemList: Array<ArkeosMdcList>;

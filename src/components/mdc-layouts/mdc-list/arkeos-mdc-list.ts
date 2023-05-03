@@ -4,17 +4,10 @@ declare var xtag: any;
 declare var XTagElement: any;
 
 export class ArkeosMdcList extends XTagElement.extensions(HTMLUListElement)  {
+    static version = "2022.1002.1116";
     public host: HTMLElement;
     private _list: MDCList;
-    private _caption = "";
-    set 'caption::attr'(val: any) {
-        this._caption = val;
-    }
-
-    get 'caption::attr'(): any {
-        return this._caption
-    }
-
+    
     constructor() {
         super();
         this.host = this as unknown as HTMLElement;

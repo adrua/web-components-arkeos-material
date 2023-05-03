@@ -1,10 +1,11 @@
 import { MDCTabBar, MDCTabBarActivatedEvent} from "@material/tab-bar";
-import { MDCTabScroller } from "@material/tab-scroller";
-import { MDCTab } from "@material/tab";
+import { ArkeosMdcTabHead } from "./arkeos-mdc-tab-head.xtag";
+import { ArkeosMdcTabPanel } from "./arkeos-mdc-tab-panel.xtag";
 
 declare var XTagElement: any;
 
 export class ArkeosMdcTabs extends XTagElement  {
+    static version = "2022.1101.0625";
     public host: HTMLElement;
 
     public promise: Promise<void>;
@@ -12,23 +13,23 @@ export class ArkeosMdcTabs extends XTagElement  {
     public _tabBar: MDCTabBar;
 
     private _tabHeadPanelElement: HTMLDivElement;
-    private _tabHeads: Array<Element> = []; 
-    private _tabPanels: Array<HTMLElement> = []; 
+    private _tabHeads: Array<ArkeosMdcTabHead> = []; 
+    private _tabPanels: Array<ArkeosMdcTabPanel> = []; 
 
     //Attributes
     private _previousTab: number;
-    private _selectTab: number;
-    set 'select-tab::attr'(val: number) {
-        if(this._selectTab !== val) {
+    private _selectTab: number = -1;
+    set 'selectTab::attr'(selectTab: number) {
+        if(this._selectTab !== selectTab) {
             this._previousTab = this._selectTab;
-            this._selectTab = val;
 
             this.promise?.then(() => {
-                let _panel = this._tabPanels[this._selectTab] as HTMLElement;
+                let _panel = this._tabPanels[selectTab];
                 if(_panel) {
+                    this._selectTab = selectTab;
                     _panel.style.display = "block";
 
-                    _panel = this._tabPanels[this._previousTab] as HTMLElement;
+                    _panel = this._tabPanels[this._previousTab];
                     if(_panel) {
                         _panel.style.display = "none";
                     }
@@ -37,48 +38,87 @@ export class ArkeosMdcTabs extends XTagElement  {
         }
     }
 
-    get 'select-tab::attr'(): number {
+    get 'selectTab::attr'(): number {
         return this._selectTab;
+    }
+
+    count(): number {
+        return this._tabHeads.length;         
+    }
+
+    add(head: ArkeosMdcTabHead, 
+        panel: ArkeosMdcTabPanel, 
+        position: number = -1, 
+        where: InsertPosition = 'afterend'): number {
+
+        let count = this.count();
+
+        this.promise.then(() => {
+            this._tabHeads.push(head);
+            this._tabPanels.push(panel);
+        
+            if(position < 0 || position >= count) {
+                this._tabHeadPanelElement.appendChild(head as any);
+                this.appendChild(panel); 
+                position = count;   
+            } else {
+                this._tabHeadPanelElement.children[position].insertAdjacentElement(where, head as any)
+                this.host.children[position].insertAdjacentElement(where, head as any)
+            }    
+        })
+        .then(() => { 
+            this._tabBar = new MDCTabBar(this.host);
+        })
+        .then(() => { 
+            this.selectTab = position; 
+            this._tabBar.activateTab(position);
+        });
+
+        return count;
     }
 
     constructor() {
         super();
 
         this.host = this as unknown as HTMLElement;
-        this.host.setAttribute("style", "width: 100%; height: 100%; overflow: hidden;")
+        this.host.style.width = "100%"; 
+        this.host.style.height = "100%"; 
+        this.host.style.overflow = "hidden";
         this.host.classList.add("mdc-tab-bar");
         this.host.setAttribute("role", "tablist");
 
         let _tabChilds = Array.from(this.host.children);
-        this._tabHeads = _tabChilds.filter((_tabHead) => _tabHead.localName == "arkeos-mdc-tab-head");
-        this._tabPanels = _tabChilds.filter((_tabPanel) => _tabPanel.localName == "arkeos-mdc-tab-panel") as unknown as Array<HTMLElement>;
+        this._tabHeads = _tabChilds.filter((_tabHead) => _tabHead.localName === "arkeos-mdc-tab-head" )  as unknown as Array<ArkeosMdcTabHead>;
+        this._tabPanels = _tabChilds.filter((_tabPanel) => _tabPanel.localName === "arkeos-mdc-tab-panel") as unknown as Array<ArkeosMdcTabPanel>;
 
         this.promise = this.render().then(() => {
             this._tabHeadPanelElement = this.host.querySelector(".mdc-tab-scroller__scroll-content");
 
             this._tabHeads.forEach((_tabHead, index) => {
                 _tabHead.setAttribute("tabindex", index.toString());
-                this._tabHeadPanelElement.appendChild(_tabHead);
+                this._tabHeadPanelElement.appendChild(_tabHead as any);
             });
 
             this._tabPanels.forEach((_tabPanel) => {
-                this.host.appendChild(_tabPanel);                
+                this.host.appendChild(_tabPanel as any);                
             });
         }).then(() => {
             this._tabBar = new MDCTabBar(this.host);
             let _this = this;
             this._tabBar.listen<MDCTabBarActivatedEvent>('MDCTabBar:activated', (event: MDCTabBarActivatedEvent) => {
                 // Show content for newly-activated tab
-                if((event as any)["path"][0] === _this) {
-                    event.preventDefault();
-                    _this["select-tab"] = event.detail.index;
-                }
+                event.preventDefault();
+                _this.selectTab = event.detail.index;
             });    
 
-            this._selectTab = this._selectTab || 0;
-            this._tabBar.activateTab(this._selectTab);
-            this._tabPanels[this._selectTab].style.display = "block";
-        })
+            this._tabHeads.forEach((_tabHead) => {
+                _tabHead.setAttribute("aria-selected", "false");
+            });
+
+            let _tab = (this._selectTab < 0) ? 0 : this._selectTab;
+            this.selectTab = _tab;
+            this._tabBar.activateTab(_tab);
+        });
     }
 
     '::template'() {

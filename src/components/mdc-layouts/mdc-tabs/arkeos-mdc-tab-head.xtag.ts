@@ -1,53 +1,40 @@
 declare var XTagElement: any;
-
-export class ArkeosMdcTabHead extends XTagElement.extensions(HTMLButtonElement)  {
+export class ArkeosMdcTabHead extends XTagElement {
+    static version = "2022.1101.0625";
     public host: HTMLElement;
+    promise: Promise<void>;
 
-    public promise: Promise<void>;
-
-	private _childs: Array<Element>;
-
-    //Attributes
-    private _captionElement: HTMLSpanElement = null;
-	private _caption: string | HTMLElement;
-    set 'caption::attr'(val: string | HTMLElement) {
-		this._caption = val;
-        this.promise.then(() => this._captionElement.replaceChildren(val));
+    private _caption: string;
+    set 'caption::attr'(val: string) { 
+        this._caption = val;
     }
 
-    get 'caption::attr'(): string | HTMLElement {
-        return this._captionElement?.innerHTML;
+    get 'caption::attr'(): string {
+        return this._caption;
     }
 
     constructor() {
         super();
 
         this.host = this as unknown as HTMLElement;
-        this.host.classList.add("mdc-tab");
-        this.host.setAttribute("role", "tab");
-        this.host.setAttribute("aria-selected", "false");
-        this.host.setAttribute("tabindex", "-1");
-
-		this._childs = Array.from(this.host.children); 
-
-        this.promise = this.render().then(() => {
-            this.host.style.paddingLeft = "0px";
-            this.host.style.paddingRight = "0px";
-			this._captionElement = this.host.firstElementChild as HTMLSpanElement;	
-        }).then(() => {
-			this._captionElement.replaceChildren(this._caption);
-		}).then(() => {
-		 	this._childs.forEach((child) => this._captionElement.appendChild(child));
-		});
+    
+        this.promise = this.render().then(() => {});
     }
 
-	'::template'() {
-		return  `<span class="mdc-tab__content">${this._caption}</span>
-	<span class="mdc-tab-indicator">
-		<span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline">
-	</span>
-</span>
-<span class="mdc-tab__ripple"></span>`;
-	}
-
+    '::template'() {
+        return `<button class="mdc-tab" aria-selected="false" role="tab">
+        <span class="mdc-tab__content">
+          <span class="mdc-tab__text-label">${this.getAttribute('caption')}</span>
+          <span class="mdc-tab__icon" aria-hidden="true"></span>
+        </span>
+        <span class="mdc-tab__ripple"></span>
+        <span class="mdc-tab-indicator">
+          <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+        </span>
+      </button>
+`;		
+    }
 }
+
+//customElements.define("arkeos-mdc-tab-panel-head", ArkeosMDCTabHead, { extends: "button" });
+

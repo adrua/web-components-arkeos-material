@@ -1,5 +1,4 @@
 @use "@material/theme/mdc-theme";
-@use '@material/tab/_mixins.scss';
 
 @use "@material/floating-label/mdc-floating-label";
 @use "@material/line-ripple/mdc-line-ripple";
@@ -8,16 +7,42 @@
 
 @use "@material/layout-grid/mdc-layout-grid";
 
-@use "@material/icon-button";
 @use "@material/top-app-bar/mdc-top-app-bar";
 
 @use "@material/list";
+@use "@material/linear-progress";
+@use "@material/circular-progress";
+
+@use "@material/form-field/mdc-form-field";
+@use "@material/checkbox/mdc-checkbox";
+
+@use "@material/list/mdc-list";
+@use "@material/menu-surface/mdc-menu-surface";
+@use "@material/menu/mdc-menu";
+@use "@material/select/styles" as select-styles;
+
+@use "@material/tab-bar/mdc-tab-bar";
+@use "@material/tab-scroller/mdc-tab-scroller";
+@use "@material/tab-indicator/mdc-tab-indicator";
+@use "@material/tab/mdc-tab";
+
+@use "@material/checkbox"; // Required only for data table with row selection.
+@use "@material/icon-button"; // Required only for data table with column 
+@use "@material/data-table/data-table";
+
+@include checkbox.core-styles;
+//@include icon-button.core-styles;
+@include data-table.core-styles;
+@include data-table.theme-baseline;
 
 //@include list.core-styles;
-
-//@include icon-button.core-styles;
+@include list.deprecated-core-styles;
 
 @include textfield.core-styles;
+
+@include linear-progress.core-styles;
+@include circular-progress.core-styles;
+
 
 /* Build a Material theme */
 // To begin customizing your theme, modify these variables. By default each theme starts off with our baseline values, so you can easily swap them out.

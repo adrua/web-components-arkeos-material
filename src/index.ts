@@ -7,6 +7,8 @@ import { ArkeosMdcTextField } from './components/mdc-form/arkeos-mdc-form-text-f
 import { ArkeosMdcAppBar } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-app-bar.xtag';
 import { ArkeosMdcAppBarContent } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-app-content.xtag';
 import { ArkeosMdcIcon } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-icon.xtag';
+import { ArkeosMdcCircularProgressBar } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-circular-progress-bar';
+import { ArkeosMdcLinearProgressBar } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-linear-progress-bar';
 import { ArkeosMdcToolbarRow } from './components/mdc-layouts/mdc-app-bar/arkeos-mdc-toolbar-row.xtag';
 import { ArkeosMdcList } from './components/mdc-layouts/mdc-list/arkeos-mdc-list';
 import { ArkeosMdcListGroup } from './components/mdc-layouts/mdc-list/arkeos-mdc-list-groups';
@@ -34,10 +36,9 @@ export { ArkeosMdcTabs } from './components/mdc-layouts/mdc-tabs/arkeos-mdc-tabs
 
 declare var xtag: any;
 
-import './index.css';
 import './index.scss';
 
-function registerComponent(webComponent: string, newComponent: any) {
+function XtagRegisterComponent(webComponent: string, newComponent: any) {
     let component: any = customElements.get(webComponent);
     if(component) {
         if(component.version < newComponent.version) {
@@ -48,26 +49,39 @@ function registerComponent(webComponent: string, newComponent: any) {
     }   
 }
 
-//Forms Input
-registerComponent('arkeos-mdc-text-field', ArkeosMdcTextField);
-registerComponent('arkeos-mdc-checkbox', ArkeosMdcCheckBox);
-registerComponent('arkeos-mdc-select-item', ArkeosMdcSelectItem);
-registerComponent('arkeos-mdc-select', ArkeosMdcSelect);
+function registerComponent(webComponent: string, newComponent: any, options?: any) {
+    let component: any = customElements.get(webComponent);
+    if(component) {
+        if(component.version < newComponent.version) {
+            customElements.define(webComponent, newComponent, options);        
+        }
+    } else {
+        customElements.define(webComponent, newComponent, options);        
+    }   
+}
 
-registerComponent('arkeos-mdc-datatable-column', ArkeosMdcDataTableColumn);
-registerComponent('arkeos-mdc-datatable', ArkeosMdcDataTable);
+//Forms Input
+XtagRegisterComponent('arkeos-mdc-text-field', ArkeosMdcTextField);
+XtagRegisterComponent('arkeos-mdc-checkbox', ArkeosMdcCheckBox);
+XtagRegisterComponent('arkeos-mdc-select-item', ArkeosMdcSelectItem);
+XtagRegisterComponent('arkeos-mdc-select', ArkeosMdcSelect);
+
+XtagRegisterComponent('arkeos-mdc-datatable-column', ArkeosMdcDataTableColumn);
+XtagRegisterComponent('arkeos-mdc-datatable', ArkeosMdcDataTable);
 
 //Layout
-registerComponent('arkeos-mdc-app-content', ArkeosMdcAppBarContent);
-registerComponent('arkeos-mdc-app', ArkeosMdcAppBar);
-registerComponent('arkeos-mdc-icon', ArkeosMdcIcon);
-registerComponent('arkeos-mdc-toolbar-row', ArkeosMdcToolbarRow);
+XtagRegisterComponent('arkeos-mdc-app-content', ArkeosMdcAppBarContent);
+XtagRegisterComponent('arkeos-mdc-app', ArkeosMdcAppBar);
+XtagRegisterComponent('arkeos-mdc-icon', ArkeosMdcIcon);
+XtagRegisterComponent('arkeos-mdc-toolbar-row', ArkeosMdcToolbarRow);
+XtagRegisterComponent("arkeos-mdc-linear-progress-bar", ArkeosMdcLinearProgressBar);
+XtagRegisterComponent("arkeos-mdc-circular-progress-bar", ArkeosMdcCircularProgressBar);
 
-registerComponent('arkeos-mdc-tabs', ArkeosMdcTabs);
-registerComponent('arkeos-mdc-tab-head', ArkeosMdcTabHead);
-registerComponent('arkeos-mdc-tab-panel', ArkeosMdcTabPanel);
+XtagRegisterComponent('arkeos-mdc-tabs', ArkeosMdcTabs);
+XtagRegisterComponent('arkeos-mdc-tab-head', ArkeosMdcTabHead);
+XtagRegisterComponent("arkeos-mdc-tab-panel", ArkeosMdcTabPanel);
 
-registerComponent('arkeos-mdc-list-item', ArkeosMdcListItem);
-registerComponent('arkeos-mdc-list-group', ArkeosMdcListGroup);
-registerComponent('arkeos-mdc-list', ArkeosMdcList);
+XtagRegisterComponent('arkeos-mdc-list-item', ArkeosMdcListItem);
+XtagRegisterComponent('arkeos-mdc-list-group', ArkeosMdcListGroup);
+XtagRegisterComponent('arkeos-mdc-list', ArkeosMdcList);
 
