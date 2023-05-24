@@ -46,6 +46,11 @@ export class ArkeosMdcTabs extends XTagElement  {
         return this._tabHeads.length;         
     }
 
+    activateTab(position: number) {
+        this.selectTab = position;
+        this._tabBar.activateTab(position);
+    } 
+
     add(head: ArkeosMdcTabHead, 
         panel: ArkeosMdcTabPanel, 
         position: number = -1, 
@@ -107,8 +112,11 @@ export class ArkeosMdcTabs extends XTagElement  {
             let _this = this;
             this._tabBar.listen<MDCTabBarActivatedEvent>('MDCTabBar:activated', (event: MDCTabBarActivatedEvent) => {
                 // Show content for newly-activated tab
-                event.preventDefault();
-                _this.selectTab = event.detail.index;
+                //event.preventDefault();
+                if(!(event.detail as any).execute)  {
+                    _this.selectTab = event.detail.index;
+                    (event.detail as any).execute = true;
+                }
             });    
 
             this._tabHeads.forEach((_tabHead) => {
