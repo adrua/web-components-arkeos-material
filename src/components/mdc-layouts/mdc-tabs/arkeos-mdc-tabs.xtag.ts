@@ -46,19 +46,20 @@ export class ArkeosMdcTabs extends XTagElement  {
         return this._tabHeads.length;         
     }
 
-    activateTab(position: number) {
+    activateTab(position: number): { panel: ArkeosMdcTabPanel, head: ArkeosMdcTabPanel } {
         this.selectTab = position;
         this._tabBar.activateTab(position);
+        return { panel: this._tabPanels[this.selectTab], head: this._tabHeads[this.selectTab]};
     } 
 
     add(head: ArkeosMdcTabHead, 
         panel: ArkeosMdcTabPanel, 
         position: number = -1, 
-        where: InsertPosition = 'afterend'): number {
+        where: InsertPosition = 'afterend'): Promise<any> {
 
         let count = this.count();
 
-        this.promise.then(() => {
+        return this.promise.then(() => {
             this._tabHeads.push(head);
             this._tabPanels.push(panel);
         
@@ -70,16 +71,13 @@ export class ArkeosMdcTabs extends XTagElement  {
                 this._tabHeadPanelElement.children[position].insertAdjacentElement(where, head as any)
                 this.host.children[position].insertAdjacentElement(where, head as any)
             }    
-        })
-        .then(() => { 
-            this._tabBar = new MDCTabBar(this.host);
-        })
-        .then(() => { 
-            this.selectTab = position; 
-            this._tabBar.activateTab(position);
-        });
 
-        return count;
+            return {position};
+        })
+        .then(({position}) => { 
+            this._tabBar = new MDCTabBar(this.host);
+            return {position};
+        });
     }
 
     constructor() {
@@ -89,6 +87,8 @@ export class ArkeosMdcTabs extends XTagElement  {
         this.host.style.width = "100%"; 
         this.host.style.height = "100%"; 
         this.host.style.overflow = "hidden";
+        this.host.style.display = "flex";
+        this.host.style.flexDirection = "column";
         this.host.classList.add("mdc-tab-bar");
         this.host.setAttribute("role", "tablist");
 

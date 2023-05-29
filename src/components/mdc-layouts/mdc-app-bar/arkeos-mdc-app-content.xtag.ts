@@ -13,7 +13,6 @@ export class ArkeosMdcAppBarContent extends XTagElement  {
         this.host.style.width = "100%";
         this.host.style.height = "100%";
         this.host.style.overflow = "none";
-        this.host.style.position = "absolute";
 
         this.promise.then(() => {
         })

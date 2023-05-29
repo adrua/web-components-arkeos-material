@@ -12,6 +12,7 @@ export class ArkeosMdcTabPanel extends XTagElement {
         this.host.style.width = "100%"; 
         this.host.style.height = "100%"; 
         this.host.style.overflow = "hidden";
+        this.host.style.flex = "1";
         this.host.style.display = "none";	
         let children = Array.from(this.host.children);
 
